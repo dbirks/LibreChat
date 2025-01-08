@@ -12,6 +12,7 @@ meili_data*
 librechat*
 Dockerfile*
 docs
+logs
 
 # Ignore all hidden files
 .*
