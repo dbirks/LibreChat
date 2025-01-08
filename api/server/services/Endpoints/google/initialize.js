@@ -7,7 +7,7 @@ const { GoogleClient } = require('~/app');
 const initializeClient = async ({ req, res, endpointOption, overrideModel, optionsOnly }) => {
   const {
     GOOGLE_KEY,
-    GOOGLE_KEY_JSON_FILENAME,
+    GOOGLE_KEY_JSON_FILE,
     GOOGLE_REVERSE_PROXY,
     GOOGLE_AUTH_HEADER,
     PROXY,
@@ -21,12 +21,13 @@ const initializeClient = async ({ req, res, endpointOption, overrideModel, optio
     userKey = await getUserKey({ userId: req.user.id, name: EModelEndpoint.google });
   }
 
-  const googleKeyJsonFilename = GOOGLE_KEY_JSON_FILENAME ?? '~/data/auth.json';
+  const googleKeyJsonFilename = GOOGLE_KEY_JSON_FILE ?? '~/data/auth.json';
   let serviceKey = {};
   try {
+    console.log(`Loading Google service key from ${googleKeyJsonFilename}`);
     serviceKey = require(googleKeyJsonFilename);
   } catch (e) {
-    // Do nothing
+    console.error(`Failed to load Google service key from ${googleKeyJsonFilename} with error: ${e.message}`);
   }
 
   const credentials = isUserProvided
