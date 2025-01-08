@@ -3,7 +3,6 @@ const { getUserKey, checkUserKeyExpiry } = require('~/server/services/UserServic
 const { getLLMConfig } = require('~/server/services/Endpoints/google/llm');
 const { isEnabled } = require('~/server/utils');
 const { GoogleClient } = require('~/app');
-const logger = require('~/config/winston');
 
 const initializeClient = async ({ req, res, endpointOption, overrideModel, optionsOnly }) => {
   const {
@@ -34,7 +33,7 @@ const initializeClient = async ({ req, res, endpointOption, overrideModel, optio
     ? userKey
     : {
       [AuthKeys.GOOGLE_SERVICE_KEY]: serviceKey,
-      ...(GOOGLE_KEY && !isUserProvided && { [AuthKeys.GOOGLE_API_KEY]: GOOGLE_KEY }),
+      [AuthKeys.GOOGLE_API_KEY]: GOOGLE_KEY,
     };
 
   let clientOptions = {};
