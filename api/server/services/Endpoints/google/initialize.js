@@ -25,17 +25,16 @@ const initializeClient = async ({ req, res, endpointOption, overrideModel, optio
   const googleKeyJsonFilename = GOOGLE_KEY_JSON_FILE ?? '~/data/auth.json';
   let serviceKey = {};
   try {
-    logger.info(`Loading Google service key from ${googleKeyJsonFilename}`);
     serviceKey = require(googleKeyJsonFilename);
   } catch (e) {
-    logger.error(`Failed to load Google service key from ${googleKeyJsonFilename} with error: ${e.message}`);
+    // Do nothing
   }
 
   const credentials = isUserProvided
     ? userKey
     : {
       [AuthKeys.GOOGLE_SERVICE_KEY]: serviceKey,
-      [AuthKeys.GOOGLE_API_KEY]: GOOGLE_KEY,
+      ...(GOOGLE_KEY && !isUserProvided && { [AuthKeys.GOOGLE_API_KEY]: GOOGLE_KEY }),
     };
 
   let clientOptions = {};
