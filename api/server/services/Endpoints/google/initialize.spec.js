@@ -79,3 +79,23 @@ describe('google/initializeClient', () => {
     );
   });
 });
+
+describe('initializeClient with GOOGLE_KEY_JSON_FILENAME', () => {
+  test('should load service key from custom filename', async () => {
+    process.env.GOOGLE_KEY_JSON_FILENAME = '/custom/path/auth.json';
+    jest.mock('/custom/path/auth.json', () => ({ some: 'mockedKey' }), { virtual: true });
+
+    const req = {
+      body: { key: null },
+      user: { id: '123' },
+      app,
+    };
+    const res = {};
+    const { credentials } = await initializeClient({ req, res });
+
+    expect(credentials).toEqual({
+      GOOGLE_SERVICE_KEY: { some: 'mockedKey' },
+      GOOGLE_API_KEY: undefined,
+    });
+  });
+});
