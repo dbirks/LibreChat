@@ -3,6 +3,7 @@ const { getUserKey, checkUserKeyExpiry } = require('~/server/services/UserServic
 const { getLLMConfig } = require('~/server/services/Endpoints/google/llm');
 const { isEnabled } = require('~/server/utils');
 const { GoogleClient } = require('~/app');
+const logger = require('~/config/winston');
 
 const initializeClient = async ({ req, res, endpointOption, overrideModel, optionsOnly }) => {
   const {
@@ -24,10 +25,10 @@ const initializeClient = async ({ req, res, endpointOption, overrideModel, optio
   const googleKeyJsonFilename = GOOGLE_KEY_JSON_FILE ?? '~/data/auth.json';
   let serviceKey = {};
   try {
-    console.log(`Loading Google service key from ${googleKeyJsonFilename}`);
+    logger.info(`Loading Google service key from ${googleKeyJsonFilename}`);
     serviceKey = require(googleKeyJsonFilename);
   } catch (e) {
-    console.error(`Failed to load Google service key from ${googleKeyJsonFilename} with error: ${e.message}`);
+    logger.error(`Failed to load Google service key from ${googleKeyJsonFilename} with error: ${e.message}`);
   }
 
   const credentials = isUserProvided
