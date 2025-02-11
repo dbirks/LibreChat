@@ -6,6 +6,7 @@ import type { SetterOrUpdater } from 'recoil';
 import type * as t from 'librechat-data-provider';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { LucideIcon } from 'lucide-react';
+import type { TranslationKeys } from '~/hooks';
 
 export type CodeBarProps = {
   lang: string;
@@ -66,7 +67,10 @@ export type GenericSetter<T> = (value: T | ((currentValue: T) => T)) => void;
 
 export type LastSelectedModels = Record<t.EModelEndpoint, string>;
 
-export type LocalizeFunction = (phraseKey: string, ...values: string[]) => string;
+export type LocalizeFunction = (
+    phraseKey: TranslationKeys,
+    options?: Record<string, string | number>
+) => string;
 
 export type ChatFormValues = { text: string };
 
@@ -91,7 +95,14 @@ export type IconMapProps = {
   size?: number;
 };
 
-export type AgentIconMapProps = IconMapProps & { agentName: string };
+export type IconComponent = React.ComponentType<IconMapProps>;
+export type AgentIconComponent = React.ComponentType<AgentIconMapProps>;
+export type IconComponentTypes = IconComponent | AgentIconComponent;
+export type IconsRecord = {
+  [key in t.EModelEndpoint | 'unknown' | string]: IconComponentTypes | null | undefined;
+};
+
+export type AgentIconMapProps = IconMapProps & { agentName?: string };
 
 export type NavLink = {
   title: string;
@@ -307,6 +318,12 @@ export type TMessageProps = {
   setSiblingIdx?: ((value: number) => void | React.Dispatch<React.SetStateAction<number>>) | null;
 };
 
+export type TMessageIcon = { endpoint?: string | null; isCreatedByUser?: boolean } & Pick<
+  t.TConversation,
+  'modelLabel'
+> &
+  Pick<t.TMessage, 'model' | 'iconURL'>;
+
 export type TInitialProps = {
   text: string;
   edit: boolean;
@@ -399,7 +416,7 @@ export type TAuthConfig = {
 };
 
 export type IconProps = Pick<t.TMessage, 'isCreatedByUser' | 'model'> &
-  Pick<t.TConversation, 'chatGptLabel' | 'modelLabel' | 'jailbreak'> & {
+  Pick<t.TConversation, 'chatGptLabel' | 'modelLabel'> & {
     size?: number;
     button?: boolean;
     iconURL?: string;
