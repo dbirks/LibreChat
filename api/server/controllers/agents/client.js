@@ -690,7 +690,21 @@ class AgentClient extends BaseClient {
     });
 
     const completion = filterMalformedContentParts(this.contentParts);
-    const metadata = this.agentIdMap ? { agentIdMap: this.agentIdMap } : undefined;
+    let metadata = this.agentIdMap ? { agentIdMap: this.agentIdMap } : undefined;
+
+    // Get Perplexity citations from the graph (captured during streaming)
+    // These will be processed by BaseClient's processPerplexityResponse
+    const graphCitations = this.run?.Graph?.perplexityCitations || null;
+    const graphSearchResults = this.run?.Graph?.perplexitySearchResults || null;
+
+    // Pass raw citation data in metadata for BaseClient to process
+    if (graphCitations || graphSearchResults) {
+      metadata = {
+        ...metadata,
+        citations: graphCitations,
+        search_results: graphSearchResults,
+      };
+    }
 
     return { completion, metadata };
   }

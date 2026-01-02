@@ -32,6 +32,7 @@ const { getStrategyFunctions } = require('~/server/services/Files/strategies');
 const { checkBalance } = require('~/models/balanceMethods');
 const { truncateToolCallOutputs } = require('./prompts');
 const TextStream = require('./TextStream');
+const { processPerplexityResponse } = require('~/server/services/Citations/perplexity');
 
 class BaseClient {
   constructor(apiKey, options = {}) {
@@ -701,6 +702,17 @@ class BaseClient {
       this.abortController.requestCompleted = true;
     }
 
+    // Process Perplexity citations if applicable
+    const turnNumber = Math.floor(this.currentMessages.length / 2);
+    const { processedCompletion, searchResults } = processPerplexityResponse({
+      completion,
+      metadata,
+      rawResponse: this.rawResponse, // May be undefined
+      turnNumber,
+      endpoint: this.options.endpoint,
+      baseURL: this.options.baseURL,
+    });
+
     /** @type {TMessage} */
     const responseMessage = {
       messageId: responseMessageId,
@@ -717,33 +729,49 @@ class BaseClient {
       metadata,
     };
 
-    if (typeof completion === 'string') {
-      responseMessage.text = completion;
+    if (typeof processedCompletion === 'string') {
+      responseMessage.text = processedCompletion;
     } else if (
-      Array.isArray(completion) &&
+      Array.isArray(processedCompletion) &&
       (this.clientName === EModelEndpoint.agents ||
         isParamEndpoint(this.options.endpoint, this.options.endpointType))
     ) {
       responseMessage.text = '';
 
       if (!opts.editedContent || this.currentMessages.length === 0) {
-        responseMessage.content = completion;
+        responseMessage.content = processedCompletion;
       } else {
         const latestMessage = this.currentMessages[this.currentMessages.length - 1];
         if (!latestMessage?.content) {
-          responseMessage.content = completion;
+          responseMessage.content = processedCompletion;
         } else {
           const existingContent = [...latestMessage.content];
           const { type: editedType } = opts.editedContent;
           responseMessage.content = this.mergeEditedContent(
             existingContent,
-            completion,
+            processedCompletion,
             editedType,
           );
         }
       }
-    } else if (Array.isArray(completion)) {
-      responseMessage.text = completion.join('');
+    } else if (Array.isArray(processedCompletion)) {
+      responseMessage.text = processedCompletion.join('');
+    }
+
+    // Add search results as attachment if available (Perplexity citations)
+    if (searchResults) {
+      const searchAttachment = {
+        type: 'web_search',
+        web_search: {
+          ...searchResults,
+          turn: turnNumber,
+        },
+        messageId: responseMessageId,
+        conversationId,
+      };
+
+      responseMessage.attachments = responseMessage.attachments || [];
+      responseMessage.attachments.push(searchAttachment);
     }
 
     if (
@@ -789,7 +817,9 @@ class BaseClient {
     }
 
     if (this.artifactPromises) {
-      responseMessage.attachments = (await Promise.all(this.artifactPromises)).filter((a) => a);
+      const artifactAttachments = (await Promise.all(this.artifactPromises)).filter((a) => a);
+      // Merge with existing attachments (e.g., searchResults) instead of overwriting
+      responseMessage.attachments = [...(responseMessage.attachments || []), ...artifactAttachments];
     }
 
     if (this.options.attachments) {
