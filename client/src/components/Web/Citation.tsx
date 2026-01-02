@@ -74,10 +74,9 @@ export function CompositeCitation(props: CompositeCitationProps) {
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 0}
-              style={{ opacity: currentPage === 0 ? 0.5 : 1 }}
-              className="flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary"
+              className={`flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary ${currentPage === 0 ? 'opacity-50' : ''}`}
             >
-              ‹
+              {'<'}
             </button>
             <span className="text-xs text-text-tertiary">
               {currentPage + 1}/{totalPages}
@@ -85,10 +84,9 @@ export function CompositeCitation(props: CompositeCitationProps) {
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages - 1}
-              style={{ opacity: currentPage === totalPages - 1 ? 0.5 : 1 }}
-              className="flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary"
+              className={`flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary ${currentPage === totalPages - 1 ? 'opacity-50' : ''}`}
             >
-              ›
+              {'>'}
             </button>
           </span>
           <span className="flex items-center gap-1.5">
@@ -98,7 +96,7 @@ export function CompositeCitation(props: CompositeCitationProps) {
               ))}
             </span>
             <span className="text-xs text-text-tertiary">
-              {totalPages} {localize('com_sources_title').toLowerCase()}
+              {totalPages} sources
             </span>
           </span>
         </span>
