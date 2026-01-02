@@ -80,7 +80,7 @@ export function SourceHovercard({
                   href={source.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-0.5 inline-flex h-5 max-w-36 cursor-pointer items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded bg-surface-tertiary px-1.5 text-xs font-medium text-text-secondary no-underline transition-colors hover:bg-surface-hover hover:text-text-primary dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  className="ml-0.5 inline-flex h-5 max-w-36 cursor-pointer items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded bg-surface-tertiary px-1.5 text-xs font-medium !text-text-secondary !no-underline transition-colors hover:bg-surface-hover hover:!text-text-primary dark:bg-gray-700 dark:!text-gray-300 dark:hover:bg-gray-600"
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                 >

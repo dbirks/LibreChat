@@ -1,5 +1,6 @@
 import { memo, useState, useContext, useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useToastContext } from '@librechat/client';
 import type { CitationProps } from './types';
 import { SourceHovercard, FaviconImage, getCleanDomain } from '~/components/Web/SourceHovercard';
@@ -70,23 +71,23 @@ export function CompositeCitation(props: CompositeCitationProps) {
     >
       {totalPages > 1 && (
         <span className="mb-2 flex items-center justify-between border-b border-border-heavy pb-2">
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-1">
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 0}
-              className={`flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary ${currentPage === 0 ? 'opacity-50' : ''}`}
+              className={`flex cursor-pointer items-center justify-center rounded border-none bg-transparent p-0.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary ${currentPage === 0 ? 'opacity-40' : ''}`}
             >
-              {'<'}
+              <ChevronLeft className="h-3.5 w-3.5" />
             </button>
-            <span className="text-xs text-text-tertiary">
+            <span className="min-w-[2.5rem] text-center text-xs leading-none text-text-secondary">
               {currentPage + 1}/{totalPages}
             </span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages - 1}
-              className={`flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary ${currentPage === totalPages - 1 ? 'opacity-50' : ''}`}
+              className={`flex cursor-pointer items-center justify-center rounded border-none bg-transparent p-0.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary ${currentPage === totalPages - 1 ? 'opacity-40' : ''}`}
             >
-              {'>'}
+              <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </span>
           <span className="flex items-center gap-1.5">
@@ -95,7 +96,7 @@ export function CompositeCitation(props: CompositeCitationProps) {
                 <FaviconImage key={domain} domain={domain} className={i > 0 ? 'ring-1 ring-surface-secondary' : ''} />
               ))}
             </span>
-            <span className="text-xs text-text-tertiary">
+            <span className="text-xs leading-none text-text-secondary">
               {totalPages} sources
             </span>
           </span>
