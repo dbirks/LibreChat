@@ -70,33 +70,33 @@ export function CompositeCitation(props: CompositeCitationProps) {
       onMouseLeave={() => setHoveredCitationId(null)}
     >
       {totalPages > 1 && (
-        <span className="mb-3 flex items-center justify-between border-b border-border-heavy py-1">
+        <span className="mb-3 flex items-center justify-between border-b border-border-heavy pb-2">
           <span className="flex h-4 items-center gap-1">
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 0}
-              className={`flex h-4 w-4 cursor-pointer items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary hover:bg-surface-hover hover:text-text-primary ${currentPage === 0 ? 'opacity-40' : ''}`}
+              className={`flex h-4 w-4 cursor-pointer items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary hover:bg-surface-hover hover:text-text-primary -translate-y-[1.5px] ${currentPage === 0 ? 'opacity-40' : ''}`}
             >
               <ChevronLeft className="h-3.5 w-3.5" />
             </button>
-            <span className="flex h-4 min-w-[2.5rem] items-center justify-center text-xs text-text-secondary">
+            <span className="flex h-4 min-w-[2.5rem] items-center justify-center text-xs text-text-secondary -translate-y-[1.5px]">
               {currentPage + 1}/{totalPages}
             </span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages - 1}
-              className={`flex h-4 w-4 cursor-pointer items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary hover:bg-surface-hover hover:text-text-primary ${currentPage === totalPages - 1 ? 'opacity-40' : ''}`}
+              className={`flex h-4 w-4 cursor-pointer items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary hover:bg-surface-hover hover:text-text-primary -translate-y-[1.5px] ${currentPage === totalPages - 1 ? 'opacity-40' : ''}`}
             >
               <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </span>
-          <span className="flex h-4 items-center gap-1.5">
-            <span className="flex -space-x-1">
+          <span className="flex h-4 items-center gap-2">
+            <span className="flex -space-x-1 -translate-y-[1.5px]">
               {getUniqueDomains().map((domain, i) => (
                 <FaviconImage key={domain} domain={domain} className={i > 0 ? 'ring-1 ring-surface-secondary' : ''} />
               ))}
             </span>
-            <span className="flex h-4 items-center text-xs text-text-secondary">
+            <span className="flex h-4 items-center text-xs text-text-secondary -translate-y-[1.5px]">
               {totalPages} sources
             </span>
           </span>
