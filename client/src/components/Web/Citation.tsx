@@ -70,7 +70,7 @@ export function CompositeCitation(props: CompositeCitationProps) {
       onMouseLeave={() => setHoveredCitationId(null)}
     >
       {totalPages > 1 && (
-        <span className="mb-2 flex items-center justify-between border-b border-border-heavy pb-2">
+        <span className="mb-3 flex items-center justify-between border-b border-border-heavy py-1">
           <span className="flex h-4 items-center gap-1">
             <button
               onClick={handlePrevPage}
