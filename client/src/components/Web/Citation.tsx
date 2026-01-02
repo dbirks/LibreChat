@@ -30,13 +30,17 @@ export function CompositeCitation(props: CompositeCitationProps) {
 
     const firstSource = sources[0];
     const remainingCount = sources.length - 1;
-    const attribution =
-      firstSource.attribution ||
-      firstSource.title ||
-      getCleanDomain(firstSource.link || '') ||
-      localize('com_citation_source');
+    // Perplexity-style: prefer domain name for compact display
+    const domain = getCleanDomain(firstSource.link || '') || localize('com_citation_source');
 
-    return remainingCount > 0 ? `${attribution} +${remainingCount}` : attribution;
+    return remainingCount > 0 ? `${domain} +${remainingCount}` : domain;
+  };
+
+  // Get unique domains for stacked favicon display
+  const getUniqueDomains = () => {
+    if (!sources) return [];
+    const domains = sources.map((s) => getCleanDomain(s.link || '')).filter(Boolean);
+    return [...new Set(domains)].slice(0, 3); // Max 3 favicons
   };
 
   const handlePrevPage = (e: React.MouseEvent) => {
@@ -66,44 +70,58 @@ export function CompositeCitation(props: CompositeCitationProps) {
     >
       {totalPages > 1 && (
         <span className="mb-2 flex items-center justify-between border-b border-border-heavy pb-2">
-          <span className="flex gap-2">
+          <span className="flex items-center gap-2">
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 0}
               style={{ opacity: currentPage === 0 ? 0.5 : 1 }}
-              className="flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-base"
+              className="flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary"
             >
-              ←
+              ‹
             </button>
+            <span className="text-xs text-text-tertiary">
+              {currentPage + 1}/{totalPages}
+            </span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages - 1}
               style={{ opacity: currentPage === totalPages - 1 ? 0.5 : 1 }}
-              className="flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-base"
+              className="flex cursor-pointer items-center justify-center border-none bg-transparent p-0 text-sm text-text-secondary hover:text-text-primary"
             >
-              →
+              ›
             </button>
           </span>
-          <span className="text-xs text-text-tertiary">
-            {currentPage + 1}/{totalPages}
+          <span className="flex items-center gap-1.5">
+            <span className="flex -space-x-1">
+              {getUniqueDomains().map((domain, i) => (
+                <FaviconImage key={domain} domain={domain} className={i > 0 ? 'ring-1 ring-surface-secondary' : ''} />
+              ))}
+            </span>
+            <span className="text-xs text-text-tertiary">
+              {totalPages} {localize('com_sources_title').toLowerCase()}
+            </span>
           </span>
         </span>
       )}
-      <span className="mb-2 flex items-center">
-        <FaviconImage domain={getCleanDomain(currentSource.link || '')} className="mr-2" />
-        <a
-          href={currentSource.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="line-clamp-2 cursor-pointer overflow-hidden text-sm font-bold text-[#0066cc] hover:underline dark:text-blue-400 md:line-clamp-3"
-        >
-          {currentSource.attribution}
-        </a>
+      <span className="mb-1 flex items-center gap-2">
+        <FaviconImage domain={getCleanDomain(currentSource.link || '')} />
+        <span className="text-xs text-text-secondary">
+          {getCleanDomain(currentSource.link || '')}
+        </span>
       </span>
-      <h4 className="mb-1.5 mt-0 text-xs text-text-primary md:text-sm">{currentSource.title}</h4>
-      <p className="my-2 text-ellipsis break-all text-xs text-text-secondary md:text-sm">
-        {currentSource.snippet}
-      </p>
+      <a
+        href={currentSource.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mb-1.5 line-clamp-2 cursor-pointer text-sm font-semibold text-text-primary hover:underline"
+      >
+        {currentSource.title || currentSource.attribution}
+      </a>
+      {currentSource.snippet && (
+        <p className="line-clamp-3 text-xs text-text-secondary">
+          {currentSource.snippet}
+        </p>
+      )}
     </SourceHovercard>
   );
 }
@@ -183,10 +201,10 @@ export function Citation(props: CitationComponentProps) {
   if (!refData) return null;
 
   const getCitationLabel = () => {
+    // Perplexity-style: prefer domain name for compact display
     return (
-      refData.attribution ||
-      refData.title ||
       getCleanDomain(refData.link || '') ||
+      refData.attribution ||
       localize('com_citation_source')
     );
   };

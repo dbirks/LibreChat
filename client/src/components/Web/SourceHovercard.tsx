@@ -66,7 +66,7 @@ export function SourceHovercard({
               isFile ? (
                 <button
                   onClick={onClick}
-                  className="ml-1 inline-block h-5 max-w-36 cursor-pointer items-center overflow-hidden text-ellipsis whitespace-nowrap rounded-xl border border-border-heavy bg-surface-secondary px-2 text-xs font-medium text-blue-600 no-underline transition-colors hover:bg-surface-hover dark:border-border-medium dark:text-blue-400 dark:hover:bg-surface-tertiary"
+                  className="ml-0.5 inline-flex h-5 max-w-36 cursor-pointer items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded bg-surface-tertiary px-1.5 text-xs font-medium text-text-secondary no-underline transition-colors hover:bg-surface-hover hover:text-text-primary dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                   title={
@@ -80,7 +80,7 @@ export function SourceHovercard({
                   href={source.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-1 inline-block h-5 max-w-36 cursor-pointer items-center overflow-hidden text-ellipsis whitespace-nowrap rounded-xl border border-border-heavy bg-surface-secondary px-2 text-xs font-medium no-underline transition-colors hover:bg-surface-hover dark:border-border-medium dark:hover:bg-surface-tertiary"
+                  className="ml-0.5 inline-flex h-5 max-w-36 cursor-pointer items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded bg-surface-tertiary px-1.5 text-xs font-medium text-text-secondary no-underline transition-colors hover:bg-surface-hover hover:text-text-primary dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                 >
@@ -103,52 +103,42 @@ export function SourceHovercard({
             {children}
             {!children && (
               <>
-                <span className="mb-2 flex items-center">
+                {/* Domain with favicon - Perplexity style */}
+                <span className="mb-1 flex items-center gap-2">
                   {isFile ? (
-                    <div className="mr-2 flex h-4 w-4 items-center justify-center">
-                      <Paperclip className="h-3 w-3 text-text-secondary" />
-                    </div>
+                    <Paperclip className="h-4 w-4 text-text-secondary" />
                   ) : (
-                    <FaviconImage domain={domain} className="mr-2" />
+                    <FaviconImage domain={domain} />
                   )}
-                  {isFile ? (
-                    <button
-                      onClick={onClick}
-                      className="line-clamp-2 cursor-pointer overflow-hidden text-left text-sm font-bold text-[#0066cc] hover:underline dark:text-blue-400 md:line-clamp-3"
-                    >
-                      {source.attribution || source.title || localize('com_file_source')}
-                    </button>
-                  ) : (
-                    <a
-                      href={source.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="line-clamp-2 cursor-pointer overflow-hidden text-sm font-bold text-[#0066cc] hover:underline dark:text-blue-400 md:line-clamp-3"
-                    >
-                      {source.attribution || domain}
-                    </a>
-                  )}
+                  <span className="text-xs text-text-secondary">
+                    {isFile ? localize('com_file_source') : domain}
+                  </span>
                 </span>
 
+                {/* Title as clickable link */}
                 {isFile ? (
-                  <>
-                    {source.snippet && (
-                      <span className="my-2 text-ellipsis break-all text-xs text-text-secondary md:text-sm">
-                        {source.snippet}
-                      </span>
-                    )}
-                  </>
+                  <button
+                    onClick={onClick}
+                    className="mb-1.5 line-clamp-2 cursor-pointer text-left text-sm font-semibold text-text-primary hover:underline"
+                  >
+                    {source.title || source.attribution || localize('com_file_source')}
+                  </button>
                 ) : (
-                  <>
-                    <h4 className="mb-1.5 mt-0 text-xs text-text-primary md:text-sm">
-                      {source.title || source.link}
-                    </h4>
-                    {source.snippet && (
-                      <span className="my-2 text-ellipsis break-all text-xs text-text-secondary md:text-sm">
-                        {source.snippet}
-                      </span>
-                    )}
-                  </>
+                  <a
+                    href={source.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mb-1.5 line-clamp-2 cursor-pointer text-sm font-semibold text-text-primary hover:underline"
+                  >
+                    {source.title || source.attribution || source.link}
+                  </a>
+                )}
+
+                {/* Snippet */}
+                {source.snippet && (
+                  <p className="line-clamp-3 text-xs text-text-secondary">
+                    {source.snippet}
+                  </p>
                 )}
               </>
             )}
