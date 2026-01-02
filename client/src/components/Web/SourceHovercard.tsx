@@ -136,9 +136,7 @@ export function SourceHovercard({
 
                 {/* Snippet */}
                 {source.snippet && (
-                  <p className="line-clamp-3 text-xs text-text-secondary">
-                    {source.snippet}
-                  </p>
+                  <p className="line-clamp-3 text-xs text-text-secondary">{source.snippet}</p>
                 )}
               </>
             )}

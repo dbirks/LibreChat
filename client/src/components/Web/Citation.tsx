@@ -75,29 +75,33 @@ export function CompositeCitation(props: CompositeCitationProps) {
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 0}
-              className={`flex h-4 w-4 items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary -translate-y-[2.5px] ${currentPage === 0 ? 'cursor-default opacity-40' : 'cursor-pointer hover:bg-surface-hover hover:text-text-primary'}`}
+              className={`flex h-4 w-4 -translate-y-[2.5px] items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary ${currentPage === 0 ? 'cursor-default opacity-40' : 'cursor-pointer hover:bg-surface-hover hover:text-text-primary'}`}
             >
               <ChevronLeft className="h-3.5 w-3.5" />
             </button>
-            <span className="flex h-4 min-w-[2.5rem] items-center justify-center text-xs text-text-secondary -translate-y-[2.5px]">
+            <span className="flex h-4 min-w-[2.5rem] -translate-y-[2.5px] items-center justify-center text-xs text-text-secondary">
               {currentPage + 1}/{totalPages}
             </span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages - 1}
-              className={`flex h-4 w-4 items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary -translate-y-[2.5px] ${currentPage === totalPages - 1 ? 'cursor-default opacity-40' : 'cursor-pointer hover:bg-surface-hover hover:text-text-primary'}`}
+              className={`flex h-4 w-4 -translate-y-[2.5px] items-center justify-center rounded border-none bg-transparent p-0 text-text-secondary ${currentPage === totalPages - 1 ? 'cursor-default opacity-40' : 'cursor-pointer hover:bg-surface-hover hover:text-text-primary'}`}
             >
               <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </span>
           <span className="flex h-4 items-center gap-2">
-            <span className="flex -space-x-1 -translate-y-[2.5px]">
+            <span className="flex -translate-y-[2.5px] -space-x-1">
               {getUniqueDomains().map((domain, i) => (
-                <FaviconImage key={domain} domain={domain} className={i > 0 ? 'ring-1 ring-surface-secondary' : ''} />
+                <FaviconImage
+                  key={domain}
+                  domain={domain}
+                  className={i > 0 ? 'ring-1 ring-surface-secondary' : ''}
+                />
               ))}
             </span>
-            <span className="flex h-4 items-center text-xs text-text-secondary -translate-y-[2.5px]">
-              {totalPages} sources
+            <span className="flex h-4 -translate-y-[2.5px] items-center text-xs text-text-secondary">
+              {localize('com_citation_sources_count', { count: totalPages })}
             </span>
           </span>
         </span>
@@ -117,9 +121,7 @@ export function CompositeCitation(props: CompositeCitationProps) {
         {currentSource.title || currentSource.attribution}
       </a>
       {currentSource.snippet && (
-        <p className="line-clamp-3 text-xs text-text-secondary">
-          {currentSource.snippet}
-        </p>
+        <p className="line-clamp-3 text-xs text-text-secondary">{currentSource.snippet}</p>
       )}
     </SourceHovercard>
   );
@@ -202,9 +204,7 @@ export function Citation(props: CitationComponentProps) {
   const getCitationLabel = () => {
     // Perplexity-style: prefer domain name for compact display
     return (
-      getCleanDomain(refData.link || '') ||
-      refData.attribution ||
-      localize('com_citation_source')
+      getCleanDomain(refData.link || '') || refData.attribution || localize('com_citation_source')
     );
   };
 

@@ -820,7 +820,10 @@ class BaseClient {
     if (this.artifactPromises) {
       const artifactAttachments = (await Promise.all(this.artifactPromises)).filter((a) => a);
       // Merge with existing attachments (e.g., searchResults) instead of overwriting
-      responseMessage.attachments = [...(responseMessage.attachments || []), ...artifactAttachments];
+      responseMessage.attachments = [
+        ...(responseMessage.attachments || []),
+        ...artifactAttachments,
+      ];
     }
 
     if (this.options.attachments) {

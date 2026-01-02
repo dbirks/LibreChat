@@ -220,11 +220,13 @@ function processTree(tree: Node) {
           const refIndex = Number(match![3]);
 
           // Collect adjacent standalone citations into a group
-          const citations: Array<Citation> = [{
-            turn,
-            refType,
-            index: refIndex,
-          }];
+          const citations: Array<Citation> = [
+            {
+              turn,
+              refType,
+              index: refIndex,
+            },
+          ];
 
           let lookAheadPos = matchIndex + matchText.length;
 

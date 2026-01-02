@@ -86,7 +86,7 @@ function injectCitationMarkers(content, turnNumber) {
 
   // Unicode citation marker (U+E202 - Private Use Area)
   // This creates the actual Unicode character, not the escape sequence
-  const CITATION_MARKER = String.fromCharCode(0xE202);
+  const CITATION_MARKER = String.fromCharCode(0xe202);
 
   // Replace [1], [2], etc. with Unicode markers
   // Regex to match [number] patterns
